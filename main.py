@@ -1,19 +1,37 @@
 import os
-import discord
-from dotenv import load_dotenv
-from discord.ext import commands
 import random
+import discord
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from discord import AllowedMentions
+from discord.ext import commands
+from dotenv import load_dotenv
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
+scheduler = AsyncIOScheduler()
+
+ANNOUNCEMENT_CHANNEL_ID = 1067939590440235122
+TEST_CHANNEL_ID = 1418893571729395824
+MEETINGS_ROLE_ID = 1419223956430524508
+MEETING_ANNOUNCEMENT_HOUR = 12
+MEETING_ANNOUNCEMENT_MINUTE = 30
+
 
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
+    scheduler.add_job(send_meeting_announcement, "cron", day_of_week="tuesday", hour=MEETING_ANNOUNCEMENT_HOUR,
+                      minute=MEETING_ANNOUNCEMENT_MINUTE)
+    scheduler.start()
+
+
+async def send_meeting_announcement():
+    channel = bot.get_channel(ANNOUNCEMENT_CHANNEL_ID)
+    await channel.send(f"<@{MEETINGS_ROLE_ID}> Hiya! Today's meeting begins at 4:00 — be there or be square. Also, we'll be announcing the winners of the draw!", allowed_mentions=AllowedMentions(everyone=True))
 
 
 @bot.command(help="Calculates the sum of two numbers.")
