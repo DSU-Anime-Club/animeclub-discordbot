@@ -24,14 +24,16 @@ MEETING_ANNOUNCEMENT_MINUTE = 30
 async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
-    scheduler.add_job(send_meeting_announcement, "cron", day_of_week="tuesday", hour=MEETING_ANNOUNCEMENT_HOUR,
+    scheduler.add_job(send_meeting_announcement, "cron", day_of_week="tue", hour=MEETING_ANNOUNCEMENT_HOUR,
                       minute=MEETING_ANNOUNCEMENT_MINUTE)
     scheduler.start()
 
 
 async def send_meeting_announcement():
     channel = bot.get_channel(ANNOUNCEMENT_CHANNEL_ID)
-    await channel.send(f"<@{MEETINGS_ROLE_ID}> Hiya! Today's meeting begins at 4:00 — be there or be square. Also, we'll be announcing the winners of the draw!", allowed_mentions=AllowedMentions(everyone=True))
+    await channel.send(
+        f"<@&{MEETINGS_ROLE_ID}> Hiya! Today's meeting begins at 4:00 — be there or be square. Also, we'll be announcing the winners of the draw!",
+        allowed_mentions=AllowedMentions(everyone=True))
 
 
 @bot.command(help="Calculates the sum of two numbers.")
@@ -42,12 +44,10 @@ async def calc(ctx, num: int = commands.parameter(description="The first number 
 
 @bot.command(help="Play a game of rock paper scissors.")
 async def rps(ctx, choice=commands.parameter(description="Either rock, paper, or scissors")):
-    player_choice = 0
     com_choice = random.randint(1, 3)
     com_choice_string = ""
 
     if choice == "rock":
-        player_choice = 1
         if com_choice == 1:
             state = "tie"
             com_choice_string = "rock"
@@ -59,7 +59,6 @@ async def rps(ctx, choice=commands.parameter(description="Either rock, paper, or
             com_choice_string = "scissors"
 
     elif choice == "paper":
-        player_choice = 2
         if com_choice == 1:
             state = "win"
             com_choice_string = "rock"
@@ -71,7 +70,6 @@ async def rps(ctx, choice=commands.parameter(description="Either rock, paper, or
             com_choice_string = "scissors"
 
     elif choice == "scissors":
-        player_choice = 3
         if com_choice == 1:
             state = "loss"
             com_choice_string = "rock"
