@@ -1,4 +1,4 @@
-name: Remote Deploy
+name: Deploy Bot
 on:
   push:
     branches: [ main ]
@@ -7,14 +7,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploying to Debian VM
+      - name: SSH and Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/animeclub-discordbot
-            git pull origin main
-            pip3 install -r requirements.txt
-            sudo systemctl restart discord-bot.service
+            # 1. Move to the directory (using the absolute home path)
+            cd /home/alcatsplat/animeclub-discordbot
+            
+            # 2. Pull the latest code using the absolute git path
+            /usr/bin/git pull origin main
+            
+            # 3. Install requirements using the absolute python path
+            /usr/bin/python3 -m pip install -r requirements.txt
+            
+            # 4. Restart the background service
+            sudo /usr/bin/systemctl restart discord-bot.service
+            
