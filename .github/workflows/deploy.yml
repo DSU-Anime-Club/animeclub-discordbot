@@ -16,11 +16,13 @@ jobs:
           script: |
             cd /home/alcatsplat/animeclub-discordbot
             /usr/bin/git pull origin main
-            /usr/bin/python3 -m pip install -r requirements.txt
             
-            # Kill the old bot window if it's running
+            # Use the virtual environment's pip to install updates
+            ./venv/bin/pip install -r requirements.txt
+            
+            # Kill the old screen
             screen -X -S discordbot quit || true
             
-            # Start a new "detached" window running your bot
-            screen -dmS discordbot /usr/bin/python3 main.py
+            # Start the bot using the virtual environment's python
+            screen -dmS discordbot ./venv/bin/python main.py
             
