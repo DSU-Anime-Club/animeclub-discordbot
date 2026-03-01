@@ -35,6 +35,7 @@ MEETING_ANNOUNCEMENT_MINUTE = 30
 
 @bot.event
 async def on_ready():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="the server"))
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('--------------------------------------------')
     scheduler.add_job(send_meeting_announcement, "cron", day_of_week="tue", hour=MEETING_ANNOUNCEMENT_HOUR,
@@ -45,7 +46,7 @@ async def on_ready():
 async def send_meeting_announcement():
     channel = bot.get_channel(ANNOUNCEMENT_CHANNEL_ID)
     await channel.send(
-        f"<@&{MEETINGS_ROLE_ID}> Hiya! Today's meeting begins at 4:00 — be there or be square. Also, we'll be announcing the winners of the draw!",
+        f"<@&{MEETINGS_ROLE_ID}> TEST_MESSAGE",
         allowed_mentions=AllowedMentions(everyone=True))
 
 
