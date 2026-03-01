@@ -35,11 +35,11 @@ MEETING_ANNOUNCEMENT_MINUTE = 30
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="the server"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="hi chat :3 | $help"))
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('--------------------------------------------')
-    scheduler.add_job(send_meeting_announcement, "cron", day_of_week="tue", hour=MEETING_ANNOUNCEMENT_HOUR,
-                      minute=MEETING_ANNOUNCEMENT_MINUTE)
+    #scheduler.add_job(send_meeting_announcement, "cron", day_of_week="tue", hour=MEETING_ANNOUNCEMENT_HOUR,
+                      #minute=MEETING_ANNOUNCEMENT_MINUTE)
     scheduler.start()
 
 
@@ -82,7 +82,7 @@ async def rps(ctx, choice=commands.parameter(description="Either rock, paper, or
     await ctx.send(game_result)
 
 
-@bot.command()
+@bot.command(help="Chat with Rin using the power of AI!")
 async def ask(ctx, *, question):
     channel_id = ctx.channel.id
 
@@ -111,7 +111,7 @@ async def ask(ctx, *, question):
             await ctx.send(answer)
 
         except Exception as e:
-            await ctx.send(f"An error has occured: {e}")
+            await ctx.send(f"An error has occurred: {e}")
 
 
 bot.run(os.getenv('DISCORD_TOKEN'))
