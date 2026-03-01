@@ -1,0 +1,28 @@
+name: Deploy Bot
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/alcatsplat/animeclub-discordbot
+            /usr/bin/git pull origin main
+            
+            # Use the virtual environment's pip to install updates
+            ./venv/bin/pip install -r requirements.txt
+            
+            # Kill the old screen
+            screen -X -S discordbot quit || true
+            
+            # Start the bot using the virtual environment's python
+            screen -dmS discordbot ./venv/bin/python main.py
+            
